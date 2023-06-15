@@ -22,9 +22,8 @@ public class Game {
 
             board = new int[n][m];
 
-            ArrayList<String> arrayList = new ArrayList<>();
+            ArrayList<String> arrayList = gamePlay(n,m);
             scanner.nextLine();
-            arrayList = gamePlay(n,m);
 
             // Gộp các chuỗi thành một chuỗi duy nhất
 
@@ -33,7 +32,7 @@ public class Game {
             Collections.shuffle(arrayList);
             StringBuilder sb = new StringBuilder();
             for (String s : arrayList) {
-                StringBuilder str = new StringBuilder(s);
+                StringBuilder str;
                 rand = random.nextInt(2);
                 str = new StringBuilder(s);
                 if (rand % 2 == 0){
