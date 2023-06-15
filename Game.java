@@ -1,92 +1,129 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
+    private static final Random random = new Random();
     private static final int[] rowMoves = {1, 1, 1, 0, 0, -1, -1, -1};
     private static final int[] colMoves = {1, 0, -1, 1, -1, 1, 0, -1};
     private static int[][] board;
-    private static int boardSize;
+    private static int n;
+    private static int m;
     private static char[] alphabet;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("___________Tro choi o chu________");
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Nhap vao kich thuoc dong: ");
+            n = scanner.nextInt();
+            System.out.print("Nhap vao kich thuoc cot: ");
+            m = scanner.nextInt();
 
-        System.out.print("Nhap vao kich thuoc o vuong: ");
-        boardSize = scanner.nextInt();
+            board = new int[n][m];
 
-        scanner.nextLine();
+            ArrayList<String> arrayList = new ArrayList<>();
+            scanner.nextLine();
+            arrayList = gamePlay(n,m);
 
-        System.out.print("Nhap vao chuoi ky tu: ");
-        String inputString = scanner.nextLine();
+            // Gộp các chuỗi thành một chuỗi duy nhất
 
-        // Kiểm tra kích thước chuỗi
-        int stringLength = inputString.length();
-        if (stringLength < boardSize * boardSize) {
-            System.out.println("Chuoi ky tu khong du de di qua tat cac o tren ban co.");
-            return;
-        } else if (stringLength > boardSize * boardSize) {
-            System.out.println("Chuoi ky tu vuot qua so luong o tren ban co. Cac ky tu thua se bi bo qua.");
+            int rand;
+            System.out.println(arrayList);
+            Collections.shuffle(arrayList);
+            StringBuilder sb = new StringBuilder();
+            for (String s : arrayList) {
+                StringBuilder str = new StringBuilder(s);
+                rand = random.nextInt(2);
+                str = new StringBuilder(s);
+                if (rand % 2 == 0){
+                    str.reverse();
+                }
+                sb.append(str);
+            }
+            String mergedString = sb.toString();
+            
+            alphabet = new char[n * m + 1];
+
+            // Đánh dấu các ký tự vào mảng alphabet
+            for (int i = 1; i <= n * m; i++) {
+                alphabet[i] = mergedString.charAt(i - 1);
+            }
         }
-
-        alphabet = new char[boardSize * boardSize + 1];
-        for (int i = 1; i <= boardSize * boardSize; i++) {
-            alphabet[i] = inputString.charAt(i - 1);
-        }
-
-        board = new int[boardSize][boardSize];
 
         // Khởi tạo bàn cờ với tất cả các ô có giá trị ban đầu là 0
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 board[i][j] = 0;
             }
         }
 
-        System.out.print("Nhap vao vi tri x cua o khoi dau: ");
-        int startX = scanner.nextInt();
+        int startX = random.nextInt(n);
+        int startY = random.nextInt(m);
 
-        System.out.print("Nhap vao vi tri y cua o khoi dau: ");
-        int startY = scanner.nextInt();
-
-        board[startX][startY] = 1; 
+        board[startX][startY] = 1;
 
         if (solveKingsTour(startX, startY, 2)) {
             printSolution();
         } else {
-            System.out.println("Không tìm thấy lời giải.");
+            System.out.println("Khong tim thay loi giai.");
         }
 
-        scanner.close();
+    }
+
+    public static ArrayList<String> gamePlay(int n, int m){
+        try (Scanner scanner = new Scanner(System.in)) {
+            int sum = 0;
+            ArrayList<String> arrayList = new ArrayList<>();
+            while (sum < n * m) {
+                System.out.print("Nhap vao cac tu: ");
+                String inputString = scanner.nextLine();
+                if (inputString.length() > n * m - sum) {
+                    do {
+                        System.out.println("Nhap lai tu vi vuot qua");
+                        inputString = scanner.nextLine();
+                    } while (inputString.length() > n * m - sum);
+                }
+                sum += inputString.length();
+                arrayList.add(inputString);
+                System.out.println("So ki tu cua tu con lai la: " + (n * m - sum));
+            }
+            return arrayList;
+        }
     }
 
     private static boolean solveKingsTour(int x, int y, int moveNumber) {
-        if (moveNumber == boardSize * boardSize + 1) {
-            return true; 
+        if (moveNumber == n * m + 1) {
+            return true; // Đã đi qua tất cả các ô
         }
 
+     
         for (int i = 0; i < 8; i++) {
-            int nextX = x + rowMoves[i];
-            int nextY = y + colMoves[i];
+            int direct = random.nextInt(8);
+            int nextX = x + rowMoves[direct];
+            int nextY = y + colMoves[direct];
 
             if (isValidMove(nextX, nextY)) {
                 board[nextX][nextY] = moveNumber;
                 if (solveKingsTour(nextX, nextY, moveNumber + 1)) {
                     return true;
                 } else {
-                    board[nextX][nextY] = 0;
+                    board[nextX][nextY] = 0; // Quay lui
                 }
             }
         }
 
-        return false; 
+        return false; // Không tìm thấy lời giải
     }
 
+   
     private static boolean isValidMove(int x, int y) {
-        return (x >= 0 && x < boardSize && y >= 0 && y < boardSize && board[x][y] == 0);
+        return (x >= 0 && x < n && y >= 0 && y < m && board[x][y] == 0);
     }
 
     private static void printSolution() {
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 int index = board[i][j];
                 System.out.print(alphabet[index] + "\t");
             }
