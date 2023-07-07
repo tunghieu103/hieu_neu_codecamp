@@ -4,7 +4,6 @@ import com.rungroop.web.dto.ClubDto;
 import com.rungroop.web.models.Club;
 import com.rungroop.web.repository.ClubRepository;
 import com.rungroop.web.service.ClubService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +21,11 @@ public class ClubServiceImpl implements ClubService {
     public List<ClubDto> findAllClubs() {
         List<Club> clubs = clubRepository.findAll();
         return clubs.stream().map((club) -> mapToClubDto(club)).collect(Collectors.toList()) ;
+    }
+
+    @Override
+    public Club saveClub(Club club) {
+        return clubRepository.save(club);
     }
 
     private ClubDto mapToClubDto(Club club){
