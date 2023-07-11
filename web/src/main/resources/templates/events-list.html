@@ -17,11 +17,11 @@
       <div class="row gx-5">
         <div th:each="event : ${events}" class="col-lg-6 mb-2">
           <div class="position-relative mb-3">
-            <img class="img-fluid rounded-3 mb-3" th:src="${event.photoUrl}" alt="..." />
-            <a th:text="${event.name}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!"></a>
+            <img th:href="@{/events/{eventId}(eventId=${event.id})}" class="img-fluid rounded-3 mb-3" th:src="${event.photoUrl}" alt="..." />
+            <a th:href="@{/events/{eventId}(eventId=${event.id})}" th:text="${event.name}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!"></a>
           </div>
-          <a class="btn btn-primary" th:href="@{/clubs/{clubId}(clubId=${event.id})}">View</a>
-          <a class="btn btn-primary" th:href="@{/clubs/{clubId}/edit(clubId=${event.id})}">Edit</a>
+          <a th:href="@{/events/{eventId}(eventId=${event.id})}" class="btn btn-primary">View</a>
+          <a class="btn btn-primary">Edit</a>
         </div>
       </div>
     </div>
