@@ -51,6 +51,12 @@ public class EventController {
         return "events-edit";
     }
 
+    @GetMapping ("/events/{eventId}/delete")
+    public String deleteEvent (@PathVariable ("eventId") Long eventId) {
+        eventService.deleteEvent(eventId);
+        return "redirect:/events";
+    }
+
     @PostMapping("/events/{clubId}")
     public String createEvent(@PathVariable("clubId") Long clubId, @ModelAttribute("event") EventDto eventDto,
                               BindingResult result,
@@ -78,3 +84,4 @@ public class EventController {
         return "redirect:/events";
     }
 }
+
