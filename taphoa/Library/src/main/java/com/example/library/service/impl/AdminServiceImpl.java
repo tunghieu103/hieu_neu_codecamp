@@ -6,6 +6,7 @@ import com.example.library.repository.AdminRepository;
 import com.example.library.repository.RoleRepository;
 import com.example.library.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
